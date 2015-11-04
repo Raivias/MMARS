@@ -1,3 +1,12 @@
+/**---------------- I2C.cpp ----------------
+by: Xavier Guay
+    MMARS Library
+
+PURPOSE
+This file provides the functions to use the I2C library
+
+*/
+
 #include "I2C.h"
 
 template<class msgT>
