@@ -26,7 +26,8 @@ void Mobility::mobilitySetup()
     pinMode(MOTOR2_SIDE2, OUTPUT);
 
     //Turn on I2C communication
-    coms = new I2C<MobilityMsg>(MOBILITY_ADDRESS);
+    coms = new Wire(MOBILITY_ADDRESS);
+    coms.begin(WIRE_BAUD);
 }
 
 void Mobility::moveWheels(MobilityMsg inMsg)
@@ -74,3 +75,21 @@ void Mobility::moveWheels(MobilityMsg inMsg)
     digitalWrite(MOTOR2_ENABLE, LOW);
 }
 
+/**
+//TODO figure out datatype
+datatype Mobility::mobData()
+{
+    datatype = 0;
+    datatype = speedR;
+
+    datatype = datatype  <<sizeof(int);
+    datatype = speedL;
+
+    datatype = datatype  <<sizeof(int);
+    datatype = timeLength;
+
+    datatype = datatype  <<sizeof(int);
+    datatype = timePrecision;
+
+}
+*/
