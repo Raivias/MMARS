@@ -49,47 +49,64 @@ void loop() {
 }
 
 void i2CRequestEvent(){
-  //clear buffer
+
+  /*
   //Clear Buffer
   while(Wire.available() > 0){
     Wire.read();
-  }
-  Serial.println("request event");
+  }/**/
+  //Serial.println("request event");
 
   bool topValue;
   bool leftValue;
   bool rightValue;
   bool botValue;
 
-  //get distances
-  if(1){//(DIG_OR_ANA){
-    topValue = digitalRead(DIG_PERCP_PIN_TOP);
-    delay(10);
-    leftValue = digitalRead(DIG_PERCP_PIN_LEFT);
-    delay(10);
-    rightValue = digitalRead(DIG_PERCP_PIN_RIGH);
-    delay(10);
-    botValue = digitalRead(DIG_PERCP_PIN_BOT);
-    delay(10);
-  }
-  else {
-    topValue = analogRead(ANA_PERCP_PIN_TOP);
-    delay(10);
-    leftValue = analogRead(ANA_PERCP_PIN_LEFT);
-    delay(10);
-    rightValue = analogRead(ANA_PERCP_PIN_RIGH);
-    delay(10);
-    botValue = analogRead(ANA_PERCP_PIN_BOT);
-    delay(10);
-  }
+  /*
+  Serial.print(true);
+  Serial.print(" ");
+  Serial.print(false);
+  Serial.print(" ");
+  /**/
+  /*
+  Wire.write("Word");
+  Serial.write("1");
+  Wire.write("o");
+  Serial.write("1");
+  Wire.write("r");
+  Serial.write("0");
+  Wire.write("worD");
+  Serial.write("0");
 
-  byte sendData = DataToBytes(topValue,leftValue,rightValue,botValue);
-  Serial.println(sendData, BIN);
-  Wire.write(sendData);
+  char c = 'C';
+  byte in = 1;
+  Wire.write(in);
+  /**/
 
-  return;
+  byte sendByte = DataToBytes(true,true,true,true);
+  Serial.print(sendByte, BIN);
+  Wire.write(sendByte);
+
+  Serial.print("\n");
+  /*
+  //Top Left Right Bottom
+  //Wire.write(topValue);
+  Serial.print(topValue);
+  Serial.print(" ");
+  
+  //Wire.write(leftValue);
+  Serial.print(leftValue);
+  Serial.print(" ");
+  
+  //Wire.write(rightValue);
+  Serial.print(rightValue);
+  Serial.print(" ");
+  
+  //Wire.write(botValue);
+  Serial.print(botValue);
+  Serial.println(" ");
+  /**/
 }
-
 byte DataToBytes(bool top, bool left, bool right, bool bot){
   byte topMask = 0b1000;
   byte leftMask = 0b0100;
@@ -105,3 +122,4 @@ byte DataToBytes(bool top, bool left, bool right, bool bot){
   
   return retByte;
 }
+
