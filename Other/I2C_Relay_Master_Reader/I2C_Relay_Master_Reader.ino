@@ -29,46 +29,19 @@ void loop() {
   digitalWrite(LED_PIN, HIGH);
   
   
-  Wire.requestFrom(reqFrom, 1);
+  Wire.requestFrom(reqFrom, 4);
 
-  byte in;
+  char in;
   while(Wire.available()){
-    in = Wire.read();
-    Serial.print(in, BIN);
-  }/**/
-
-  int data[4];
-  ByteToData(data, in);
-
-  Serial.print(" ");
-  Serial.print(data[0]);
-  Serial.print(data[1]);
-  Serial.print(data[2]);
-  Serial.print(data[3]);
-  /*
-  for(int counter = 0; counter < 4; counter++){
+    in = Wire.read()-1;
+    Serial.print(in,DEC);
     Serial.print(" ");
-    Serial.print(data[counter]);
   }/**/
-  
+  Serial.println();
 
-  Serial.print("\n");
+ // Serial.print("\n");
   digitalWrite(LED_PIN, LOW);
+  delay(500);
   
-  
-}
-
-void ByteToData(int data[4], byte bData){
-  byte topMask = 0b1000;
-  byte leftMask = 0b0100;
-  byte rightMask = 0b0010;
-  byte botMask = 0b0001;
-
-  data[0] = (bData & topMask  ) >> 3;
-  data[1] = (bData & leftMask ) >> 2;
-  data[2] = (bData & rightMask) >> 1;
-  data[3] = bData & botMask;
-
-  return;
 }
 

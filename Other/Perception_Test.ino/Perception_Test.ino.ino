@@ -56,52 +56,18 @@ void i2CRequestEvent(){
   }
   Serial.println("request event");
 
-  bool topValue;
-  bool leftValue;
-  bool rightValue;
-  bool botValue;
-
-  //get distances
-  if(1){//(DIG_OR_ANA){
-    topValue = digitalRead(DIG_PERCP_PIN_TOP);
-    delay(10);
-    leftValue = digitalRead(DIG_PERCP_PIN_LEFT);
-    delay(10);
-    rightValue = digitalRead(DIG_PERCP_PIN_RIGH);
-    delay(10);
-    botValue = digitalRead(DIG_PERCP_PIN_BOT);
-    delay(10);
-  }
-  else {
-    topValue = analogRead(ANA_PERCP_PIN_TOP);
-    delay(10);
-    leftValue = analogRead(ANA_PERCP_PIN_LEFT);
-    delay(10);
-    rightValue = analogRead(ANA_PERCP_PIN_RIGH);
-    delay(10);
-    botValue = analogRead(ANA_PERCP_PIN_BOT);
-    delay(10);
-  }
-
-  byte sendData = DataToBytes(topValue,leftValue,rightValue,botValue);
-  Serial.println(sendData, BIN);
-  Wire.write(sendData);
-
+  char buf[4];
+  sprintf(buf, "0000");
+  bool front = digitalRead(DIG_PERCP_PIN_TOP)==HIGH?true:false;
+  buf[0] = front+1;
+  bool left = digitalRead(DIG_PERCP_PIN_LEFT)==HIGH?false:true;
+  buf[1] = left+1;
+  bool right = digitalRead(DIG_PERCP_PIN_RIGH)==HIGH?true:false;
+  buf[2] = right+1;
+  bool back = digitalRead(DIG_PERCP_PIN_BOT)==HIGH?true:false;
+  buf[3] = back+1;
+  Wire.write(buf);
+  
   return;
 }
 
-byte DataToBytes(bool top, bool left, bool right, bool bot){
-  byte topMask = 0b1000;
-  byte leftMask = 0b0100;
-  byte rightMask = 0b0010;
-  byte botMask = 0b0001;
-
-  byte retByte;
-  
-  retByte = top << 3;
-  retByte = retByte | (left << 2);
-  retByte = retByte | (right << 1);
-  retByte = retByte | bot;
-  
-  return retByte;
-}
