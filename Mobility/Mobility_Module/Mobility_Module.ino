@@ -54,15 +54,16 @@ void loop() {
 }
 
 void mobiltyI2CEvent(int howMany){
-  char buff[howMany];
-  //put read data into buff
-  for(int count = 0; count < howMany; count++){
-    buff[count] = Wire.read();
-    Serial.print(buff[count]);
-  }
-  Serial.print("\n");
-  
-  //do response
+  int leftPower = Wire.read();
+  int rightPower = Wire.read();
+  int msec = Wire.read();
+
+  Serial.print("LPower:\t"); Serial.println(leftPower);
+  Serial.print("RPower:\t"); Serial.println(rightPower);
+  Serial.print("msec:\t"); Serial.println(msec);
+  Serial.println();
+  /**/  
+  //move(leftPower,rightpower,msec);
 }
 
 
