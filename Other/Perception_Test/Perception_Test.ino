@@ -54,13 +54,13 @@ void i2CRequestEvent(){
   while(Wire.available() > 0){
     Wire.read();
   }
-  Serial.println("request event");
+  //Serial.println("request event");
 
   char buf[4];
   sprintf(buf, "0000");
   bool front = digitalRead(DIG_PERCP_PIN_TOP)==HIGH?true:false;
   buf[0] = front+1;
-  bool left = digitalRead(DIG_PERCP_PIN_LEFT)==HIGH?false:true;
+  bool left = digitalRead(DIG_PERCP_PIN_LEFT)==HIGH?true:false;
   buf[1] = left+1;
   bool right = digitalRead(DIG_PERCP_PIN_RIGH)==HIGH?true:false;
   buf[2] = right+1;
