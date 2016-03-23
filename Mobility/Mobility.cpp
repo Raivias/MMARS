@@ -7,89 +7,43 @@ This library contains functions for programming, running, and interfacing
 with the mobility module
 
 */
+#if (ARDUINO >= 100)
+ #include "Arduino.h"
+#else
+ #include "WProgram.h"
+#endif
 #include "Mobility.h"
+#include "Wire.h"
 
-Mobility::Mobility()
-{
-    //ctor
+
+void Mobility::begin(){
+    Wire.begin();
+    this->i2cAdd = DEFAULT_MOBILITY_ADD;
 }
 
-void Mobility::mobilitySetup()
-{
-    //Set pins as outputs
-    pinMode(MOTOR1_ENABLE, OUTPUT);
-    pinMode(MOTOR2_ENABLE, OUTPUT);
-
-    pinMode(MOTOR1_SIDE1, OUTPUT);
-    pinMode(MOTOR1_SIDE2, OUTPUT);
-    pinMode(MOTOR2_SIDE1, OUTPUT);
-    pinMode(MOTOR2_SIDE2, OUTPUT);
-
-    //Turn on I2C communication
-    coms = new Wire(MOBILITY_ADDRESS);
-    coms.begin(WIRE_BAUD);
+void Mobility::begin(int address){
+    Wire.begin();
+    this->i2cAdd = address;
 }
 
-void Mobility::moveWheels(MobilityMsg inMsg)
-{
-    //Use data in msg to run the wheels
-    //Disable wheels
-    digitalWrite(MOTOR1_ENABLE, LOW);
-    digitalWrite(MOTOR2_ENABLE, LOW);
-    delay(10);
-
-    //Set power on wheels
-    if (inMsg.speedL < 0)
-    {
-        //Set side one as TODO
-        digitalWrite(MOTOR1_SIDE1, );
-        digitalWrite(MOTOR1_SIDE2, LOW);
-    }
-    else
-    {
-        //TODO
-        digitalWrite(MOTOR1_SIDE1, LOW);
-        digitalWrite(MOTOR1_SIDE2, );
-    }
-
-    if (inMsg.speedR < 0)
-    {
-        //Set side one as TODO
-        digitalWrite(MOTOR2_SIDE1, );
-        digitalWrite(MOTOR2_SIDE2, LOW);
-    }
-    else
-    {
-        //TODO
-        digitalWrite(MOTOR2_SIDE1, LOW);
-        digitalWrite(MOTOR2_SIDE2, );
-    }
-
-    //turn on and delay for time
-    digitalWrite(MOTOR1_ENABLE, HIGH);
-    digitalWrite(MOTOR2_ENABLE, HIGH);
-    delay(inMsg.timeLength * (10^inMsg.timePrecision));
-
-    //stop wheels
-    digitalWrite(MOTOR1_ENABLE, LOW);
-    digitalWrite(MOTOR2_ENABLE, LOW);
+int Mobility::move(bool lPos, unsigned char leftPower,bool rPos, unsigned char rightPower, unsigned char msec){
+  if (leftPower < -255 || leftPower > 255){
+    return -1;
+  }
+  if (rightPower < -255 || rightPower > 255){
+    return -2;
+  }
+  if(msec <= 0){
+    return -3;
+  }
+  
+  Wire.beginTransmission(this->i2cAdd);
+  Wire.write(lPos);
+  Wire.write(leftPower);
+  Wire.write(rPos);
+  Wire.write(rightPower);
+  Wire.write(msec);
+  Wire.endTransmission();
+  return 0;
 }
-
-/**
-//TODO figure out datatype
-datatype Mobility::mobData()
-{
-    datatype = 0;
-    datatype = speedR;
-
-    datatype = datatype  <<sizeof(int);
-    datatype = speedL;
-
-    datatype = datatype  <<sizeof(int);
-    datatype = timeLength;
-
-    datatype = datatype  <<sizeof(int);
-    datatype = timePrecision;
-
-}
-*/
+/**/

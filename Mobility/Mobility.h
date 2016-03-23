@@ -14,50 +14,25 @@ TODO
     -figure out datatype for mobData()
 */
 
-
-#include "Wire.h"
-
-#ifndef WIREBAUD
-#define WIREBAUD
-const int WIRE_BAUD = 9600;
-#endif // WIREBAUD
+#if (ARDUINO >= 100)
+ #include "Arduino.h"
+#else
+ #include "WProgram.h"
+#endif
 
 
-//CONSTANTS
-const int MOBILITY_ADDRESS = 4;//I@C address
-
-const int MOTOR1_ENABLE = 5;//Pin to enable motor 1
-const int MOTOR2_ENABLE = 6;//Pin to enable motor 1
-
-const int MOTOR1_SIDE1 = 7;//Runs one side of h-bridge
-const int MOTOR1_SIDE2 = 8;//Runs one side of h-bridge
-const int MOTOR2_SIDE1 = 9;//Runs one side of h-bridge
-const int MOTOR2_SIDE2 = 10;//Runs one side of h-bridge
+const int DEFAULT_MOBILITY_ADD  = 4;
 
 class Mobility
 {
-    protected:
-        struct MobilityMsg
-        {
-            const int MOB_MSG_BYTES = sizeof(int) * 4; //bytes to send over wire
-            int speedR;
-            int speedL;
-            int timeLength;
-            int timePrecision;
-            MobilityMsg(){}
-            MobilityMsg(rSpeed, lSpeed, timeL, timeP)
-                :speedR(rSpeed), speedL(lSpeed), timeLength(timeL), timePrecision(timep) {}
-        };
-
-    public:
-        Mobility();
-        void mobilitySetup();
-        // dattyoe mobData();
-    protected:
-        Wire coms;
-        void moveWheels(MobilityMsg inMsg);
-    private:
+public:
+    void begin();
+    void begin(int address);
+    int move(bool lPos, unsigned char leftPower, bool rPos, unsigned char rightPower, unsigned char msec);
+private:
+    int i2cAdd;
 
 };
-
-#endif // MOBILITY_H
+/**/
+#endif
+// MOBILITY_H
